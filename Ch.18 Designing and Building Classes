@@ -1,0 +1,140 @@
+// The Program Class
+using System;
+
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Ball redBall = new Ball(1, new Color(255, 0, 0));
+            Ball greenBall = new Ball(2, new Color(0, 255, 0));
+            Ball blueBall = new Ball(3, new Color(0, 0, 255));
+
+            redBall.Thrown();
+            redBall.Thrown();
+            Console.WriteLine(redBall.GetTimesThrown());
+
+            redBall.Thrown();
+            redBall.Thrown();
+            redBall.Thrown();
+            Console.WriteLine(redBall.GetTimesThrown());
+
+            greenBall.Thrown();
+            greenBall.Thrown();
+            greenBall.Thrown();
+            Console.WriteLine(greenBall.GetTimesThrown());
+
+            blueBall.Thrown();
+            blueBall.Pop();
+            blueBall.Thrown();
+            Console.WriteLine(blueBall.GetTimesThrown());
+
+        }
+    }
+} 
+
+// The Color Class
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HelloWorld
+{
+    class Color
+    {
+        private byte red;
+        private byte green;
+        private byte blue;
+        private byte alpha;
+
+        public Color(byte red, byte green, byte blue, byte alpha)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+            this.alpha = alpha;
+        }
+
+        public Color(byte red, byte green, byte blue)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+            this.alpha = 255;
+        }
+
+        public byte GetRed()
+        {
+            return red;
+        }
+
+        public void SetRed(byte red)
+        {
+            this.red = red;
+        }
+
+        public byte GetGreen()
+        {
+            return green;
+        }
+
+        public void SetGreen(byte green)
+        {
+            this.green = green;
+        }
+
+        public byte GetBlue()
+        {
+            return blue;
+        }
+
+        public void SetBlue(byte blue)
+        {
+            this.blue = blue;
+        }
+
+        public byte GetGrayscale()
+        {
+            return (byte)((red + green + blue) / 3);
+        }
+    }
+}
+
+// The Ball Class
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace HelloWorld
+{
+    class Ball
+    {
+        private float radius;
+        private Color color;
+        private int timesThrown;
+
+        public Ball(float radius, Color color)
+        {
+            this.radius = radius;
+            this.color = color;
+            this.timesThrown = 0;
+        }
+
+        public int GetTimesThrown()
+        {
+            return timesThrown;
+        }
+
+        public void Pop()
+        {
+            radius = 0;
+        }
+
+        public void Thrown()
+        {
+            if (radius > 0)
+                timesThrown++;
+        }
+    }
+}
