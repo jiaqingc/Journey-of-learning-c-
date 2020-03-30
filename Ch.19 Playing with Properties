@@ -1,0 +1,96 @@
+using System;
+
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Ball redBall = new Ball(1, new Color(255, 0, 0));
+            Ball greenBall = new Ball(2, new Color(0, 255, 0));
+            Ball blueBall = new Ball(3, new Color(0, 0, 255));
+
+            redBall.Thrown();
+            redBall.Thrown();
+            Console.WriteLine(redBall.TimesThrown);
+
+            redBall.Thrown();
+            redBall.Thrown();
+            redBall.Thrown();
+            Console.WriteLine(redBall.TimesThrown);
+
+            greenBall.Thrown();
+            greenBall.Thrown();
+            greenBall.Thrown();
+            Console.WriteLine(greenBall.TimesThrown);
+
+            blueBall.Thrown();
+            blueBall.Pop();
+            blueBall.Thrown();
+            Console.WriteLine(blueBall.TimesThrown);
+        }
+    }
+
+    class Color
+    {
+        private byte red;
+        private byte green;
+        private byte blue;
+        private byte alpha;
+
+        public byte Red { get; set; }
+        public byte Green { get; set; }
+        public byte Blue { get; set; }
+        public byte Alpha { get; set; }
+
+        public Color(byte red, byte green, byte blue, byte alpha)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            Alpha = alpha;
+        }
+
+        public Color(byte red, byte green, byte blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            Alpha = 255;
+        }
+
+        public byte GetGrayscale()
+        {
+            return (byte)((Red + Green + Blue) / 3);
+        }
+    }
+
+    class Ball
+    {
+        private float radius;
+        private Color color;
+        private int timesThrown;
+
+        public float Radius { get; set; }
+        public Color Color { get; set; }
+        public int TimesThrown { get; set; }
+
+        public Ball(float radius, Color color)
+        {
+            Radius = radius;
+            Color = color;
+            TimesThrown = 0;
+        }
+
+        public void Pop()
+        {
+            Radius = 0;
+        }
+
+        public void Thrown()
+        {
+            if (Radius > 0)
+                TimesThrown++;
+        }
+    }
+} 
