@@ -33,11 +33,6 @@ namespace HelloWorld
 
     class Color
     {
-        private byte red;
-        private byte green;
-        private byte blue;
-        private byte alpha;
-
         public byte Red { get; set; }
         public byte Green { get; set; }
         public byte Blue { get; set; }
