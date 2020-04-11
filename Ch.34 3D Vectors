@@ -1,0 +1,68 @@
+using System;
+using System.Reflection;
+
+namespace Practice
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Vector v1 = new Vector(1, 2, 3);
+            Vector v2 = new Vector(3, 3, 3);
+            Vector result = v1 + v2;
+            Console.WriteLine($"{result.X} {result.Y} {result.Z}");
+
+            result = v1 - v2;
+            Console.WriteLine($"{result.X} {result.Y} {result.Z}");
+
+            result = -v1;
+            Console.WriteLine($"{result.X} {result.Y} {result.Z}");
+
+            result = v1 * 4;
+            Console.WriteLine($"{result.X} {result.Y} {result.Z}");
+
+            v1 = new Vector(2, 4, 6);
+            result = v1 / 2;
+            Console.WriteLine($"{result.X} {result.Y} {result.Z}");
+        }
+    }
+
+    class Vector
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
+
+        public Vector (double x, double y, double z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        public static Vector operator + (Vector v1, Vector v2)
+        {
+            return new Vector(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
+        }
+
+        public static Vector operator - (Vector v1, Vector v2)
+        {
+            return new Vector(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
+        }
+
+        public static Vector operator - (Vector v)
+        {
+            return new Vector(-v.X, -v.Y, -v.Z);
+        }
+
+        public static Vector operator * (Vector v, double scalar)
+        {
+            return new Vector(v.X * scalar, v.Y * scalar, v.Z * scalar);
+        }
+
+        public static Vector operator / (Vector v, double scalar)
+        {
+            return new Vector(v.X / scalar, v.Y / scalar, v.Z / scalar);
+        }
+    }
+}
