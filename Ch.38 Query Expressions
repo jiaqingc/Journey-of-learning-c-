@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace Practice
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<GameObject> gameObjects = new List<GameObject>();
+            gameObjects.Add(new Ship { ID = 1, X = 0, Y = 0, CurrentHP = 50, MaxHP = 100, PlayerID = 1 });
+            gameObjects.Add(new Ship { ID = 2, X = 4, Y = 2, CurrentHP = 75, MaxHP = 100, PlayerID = 1 });
+            gameObjects.Add(new Ship { ID = 3, X = 9, Y = 3, CurrentHP = 0, MaxHP = 100, PlayerID = 2 });
+            gameObjects.Add(new Ship { ID = 3, CurrentHP = 100, MaxHP = 100, PlayerID = 2 });
+            gameObjects.Add(new Ship { ID = 3, CurrentHP = 100, MaxHP = 200, PlayerID = 2 });
+
+            List<Player> players = new List<Player>();
+            players.Add(new Player { ID = 1, UserName = "Player 1", TeamColor = "Red" });
+            players.Add(new Player { ID = 2, UserName = "Player 2", TeamColor = "Blue" });
+
+            var gameObjectsWithFullHealth = from o in gameObjects
+                                            where o.CurrentHP == o.MaxHP
+                                            select o;
+            
+            var idOfgameObjectsWithFullHealth = from o in gameObjects
+                                            where o.CurrentHP == o.MaxHP
+                                            select o.ID;
+
+            var groups = from o in gameObjects
+                                orderby o.CurrentHP / o.MaxHP
+                                group o by o.PlayerID;
+
+            // Back to Procedural Programming
+            IEnumerable<GameObject> aliveObjects = from o in gameObjects
+                                                   where o.CurrentHP > 0
+                                                   select o;
+            // Convert above code to Procedural Programming
+            var results = gameObjects.Where(o => o.CurrentHP > 0).Select(o => o);
+        }
+    }
+
+    public class GameObject
+    {
+        public int ID { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double MaxHP { get; set; }
+        public double CurrentHP { get; set; }
+        public int PlayerID { get; set; }
+    }
+
+    public class Ship : GameObject { }
+
+    public class Player
+    {
+        public int ID { get; set; }
+        public string UserName { get; set; }
+        public string TeamColor { get; set; } // A Color class might be better than string here.
+    }
+}
