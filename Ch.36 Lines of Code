@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace Practice
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string directory = "C:/Users/Jiaqing/Documents/Test";
+            Console.WriteLine(CountLinesOfCode(directory));
+        }
+
+        public static int CountLinesOfCode(string directory)
+        {
+            int count = 0;
+            foreach (string child in Directory.GetDirectories(directory))
+            {
+                count += CountLinesOfCode(child);
+            }
+
+            foreach (string file in Directory.GetFiles(directory))
+            {
+                if (file.EndsWith(".cs"))
+                    count += CountLinesOfCodeInFiles(file);
+            }
+
+            return count;
+        }
+
+        public static int CountLinesOfCodeInFiles(string file)
+        {
+            return File.ReadAllText(file).ParagraphCount();
+        }
+    }
+
+    public static class StringExtensions
+    {
+        public static int WordCount (this string text)
+        {
+            return text.Split(' ').Length;
+        } 
+
+        public static int SentenceCount (this string text)
+        {
+            return text.Split(' ').Length;
+        }
+
+        public static int ParagraphCount (this string text)
+        {
+            return text.Split(' ').Length;
+        }
+    }
+}
