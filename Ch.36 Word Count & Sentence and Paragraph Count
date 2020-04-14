@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace Practice
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string allText = File.ReadAllText("test.txt");
+            Console.WriteLine("The word count is : " + allText.WordCount());
+            Console.WriteLine("The sentence count is : " + allText.SentenceCount());
+            Console.WriteLine("The paragraph count is : " + allText.ParagraphCount());
+        }
+    }
+
+    public static class StringExtensions
+    {
+        public static int WordCount (this string text)
+        {
+            return text.Split(' ').Length;
+        } 
+
+        public static int SentenceCount (this string text)
+        {
+            return text.Split(' ').Length;
+        }
+
+        public static int ParagraphCount (this string text)
+        {
+            return text.Split(' ').Length;
+        }
+    }
+}
