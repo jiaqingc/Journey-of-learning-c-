@@ -1,0 +1,75 @@
+using System;
+using System.IO;
+using System.Reflection.Metadata.Ecma335;
+
+namespace MessageFromJuliusCaesar
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Please provide the file name that you want to encrypt: ");
+            var fileName = Console.ReadLine();
+            Console.Write("Please set the key for encrypting: ");
+            var key = Int32.Parse(Console.ReadLine());
+
+            // encrypt and decrypt a file
+            Console.WriteLine(EncryptFileContents(fileName, key));
+            Console.WriteLine(decryptFileContents(fileName, key));
+
+            // crack the message using brute force
+            for (int i = 1; i < 26; i++)
+                Console.WriteLine(decryptFileContents(fileName, i));
+        }
+
+        public static string EncryptFileContents(string fileName, int key)
+        {
+            string fileContents = File.ReadAllText("C:/Users/Jiaqing/Desktop/" + fileName).ToUpper();
+            string encryptedContents = "";
+
+            for (int i = 0; i < fileContents.Length; i++)
+            {
+                encryptedContents += EncryptLetter(fileContents[i], key);
+            }
+
+            return encryptedContents;
+        }
+
+        public static char EncryptLetter(char letter, int key)
+        {
+            if (letter > 'Z' || letter < 'A')
+                return letter;
+
+            int letterAsNumber = letter - 'A';
+            int encryptedLetter = (letterAsNumber + key) % 26;
+
+            return (char)(encryptedLetter + 'A');
+        }
+
+        public static string decryptFileContents(string fileName, int key)
+        {
+            string fileContents = File.ReadAllText("C:/Users/Jiaqing/Desktop/" + fileName).ToUpper();
+            string decryptedContents = "";
+
+            for (int i = 0; i < fileContents.Length; i++)
+            {
+                decryptedContents += decryptLetter(fileContents[i], key);
+            }
+
+            return decryptedContents;
+        }
+
+        public static char decryptLetter(char letter, int key)
+        {
+            if (letter > 'Z' || letter < 'A')
+                return letter;
+
+            int letterAsNumber = letter - 'A';
+            int decryptedLetter = (letterAsNumber - key) % 26;
+            if (decryptedLetter < 0)
+                decryptedLetter = decryptedLetter + 26;
+
+            return (char)(decryptedLetter + 'A');
+        }
+    }
+}
