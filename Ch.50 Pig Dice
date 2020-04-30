@@ -1,0 +1,89 @@
+using System;
+
+namespace Pig_Dice
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Player player1 = new Player(); player1.name = "player1";
+            Player player2 = new Player(); player2.name = "player2";
+            Console.WriteLine("Start of the Pig Dice!");
+            
+            Player currentPlayer = player1;
+            int turnScore = 0;
+
+            while (currentPlayer.totalScore < 100)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"{currentPlayer.name}'s turn: ");
+                Console.ReadKey();
+
+                int score = currentPlayer.RollDice();
+                turnScore += score;
+                showAllStatus(player1, player2);
+
+                //Console.WriteLine($"Your turn score is {turnScore}");
+
+                if (score == 0)
+                {
+                    currentPlayer = switchPlayer(currentPlayer, player1, player2);
+                    Console.WriteLine();
+                    Console.WriteLine("Sorry, you rolled a 1 in this turn, switch player.");
+                    turnScore = 0;
+                    continue;
+                }
+
+                Console.WriteLine($"Your turn score is {turnScore}");
+                if (currentPlayer.totalScore >= 100) { break; }
+
+                Console.Write("hold or roll: ");
+                string answer = Console.ReadLine();
+
+                if (answer == "hold")
+                {
+                    currentPlayer.totalScore += turnScore;
+                    currentPlayer = switchPlayer(currentPlayer, player1, player2);
+                    turnScore = 0;
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"{currentPlayer.name} got {currentPlayer.totalScore} and won! Well Done!");
+        }
+
+        private static Player switchPlayer(Player currentPlayer, Player player1, Player player2)
+        {
+            if (currentPlayer == player1) { return player2; }
+            if (currentPlayer == player2) { return player1; }
+            return null;
+        }
+
+        private static void showAllStatus(Player player1, Player player2)
+        {
+            Console.WriteLine($"{player1.name}'s total score is {player1.totalScore}");
+            Console.WriteLine($"{player2.name}'s total score is {player2.totalScore}");
+        }
+    }
+
+    class Player
+    {
+        public int totalScore { get; set; }
+        public string name { get; set; }
+
+        public int RollDice()
+        {
+            Random random = new Random();
+            int rolledDice1 = random.Next(6) + 1;
+            int rolledDice2 = random.Next(6) + 1;
+            int score = rolledDice1 + rolledDice2;
+            Console.WriteLine($"The first dice is {rolledDice1}, " +
+                $"the second dice is {rolledDice2}");
+
+            if (rolledDice1 == 1 || rolledDice2 == 1)
+                return 0;
+            else
+                return score;                
+        }
+    }
+}
