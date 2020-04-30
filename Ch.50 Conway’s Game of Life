@@ -1,0 +1,146 @@
+using System;
+using System.Threading;
+using System.IO;
+
+namespace Conways_Game_of_Life
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            GameSystem game = new GameSystem();
+            game.readStartStatusFromFile();
+
+            while (true)
+            {
+                game.drawFigure();
+                Thread.Sleep(1000);
+                Console.Clear();
+                game.update();
+            }
+        }
+    }
+    
+    public class GameSystem
+    {
+        public bool[][] status { get; set; }
+
+        public GameSystem()
+        {
+            status = new bool[20][];
+            for (int i = 0; i < 20; i++)
+                status[i] = new bool[40];
+        }
+
+        public void update()
+        {
+            // Create a copy of status to ensure it is stable
+            bool[][] originStatus = new bool[20][];
+            for (int i = 0; i < 20; i++)
+                originStatus[i] = new bool[40];
+
+            for (int row = 0; row < 20; row++)
+            {
+                for (int column = 0; column < 40; column++)
+                {
+                    originStatus[row][column] = status[row][column];
+                }
+            }
+
+            // Check every point
+            for (int row = 0; row < 20; row++)
+            {
+                for (int column = 0; column < 40; column++)
+                {
+                    // Check whether this cell will die or live in next generation
+                    int numberOfNeighbors = 0;
+
+                    // Check the top-left corner
+                    if (row > 0 && column > 0)
+                        if (originStatus[row - 1][column - 1])
+                            numberOfNeighbors += 1;
+
+                    // Check the top corner
+                    if (row > 0)
+                        if (originStatus[row - 1][column])
+                            numberOfNeighbors += 1;
+
+                    // Check the top-right corner
+                    if (row > 0 && column < 39)
+                        if (originStatus[row - 1][column + 1])
+                            numberOfNeighbors += 1;
+
+                    // Check the left corner
+                    if (column > 0)
+                        if (originStatus[row][column - 1])
+                            numberOfNeighbors += 1;
+
+                    // Check the right corner
+                    if (column < 39)
+                        if (originStatus[row][column + 1])
+                            numberOfNeighbors += 1;
+
+                    // Check the bottom-left corner
+                    if (row < 19 && column > 0)
+                        if (originStatus[row + 1][column - 1])
+                            numberOfNeighbors += 1;
+
+                    //Check the bottom corner
+                    if (row < 19)
+                        if (originStatus[row + 1][column])
+                            numberOfNeighbors += 1;
+
+                    // Check the bottom-right corner
+                    if (row < 19 && column < 39)
+                        if (originStatus[row + 1][column + 1])
+                            numberOfNeighbors += 1;
+
+                    // It will die if it has more than three neighbors or has 0 or 1 neighbor
+                    if (numberOfNeighbors > 3 || numberOfNeighbors <= 1)
+                        status[row][column] = false;
+
+                    // It will become live if it has exactly three neighbors
+                    if (numberOfNeighbors == 3)
+                        status[row][column] = true;
+                }
+            }
+        }
+
+        public void drawFigure()
+        {
+            for (int row = 0; row < 20; row++)
+            {
+                for (int column = 0; column < 40; column++)
+                {
+                    if (status[row][column])
+                        Console.Write("X");
+                    else
+                        Console.Write(".");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public void readStartStatusFromFile()
+        {
+            string file = File.ReadAllText("/Users/jiaqingc/Desktop/game_of_life");
+            Console.WriteLine("read file.");
+            string[] separatedFile = file.Split(Environment.NewLine);
+            // Console.WriteLine(separatedFile[8]);
+            // Console.WriteLine();
+
+            int row = 0;
+            foreach (var lane in separatedFile)
+            {
+                for (int column = 0; column < 40; column++)
+                {
+                    if (lane[column] == '.')
+                        status[row][column] = false;
+                    else
+                        status[row][column] = true;
+                }
+                row++;
+            }
+        }
+    }
+}
