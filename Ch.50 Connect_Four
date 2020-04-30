@@ -1,0 +1,198 @@
+using System;
+
+namespace Connect_Four
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Welcome to the game of connect four!");
+            Console.WriteLine();
+
+            // create game system, two players and a board
+            GameSystem game = new GameSystem();
+            Board board = new Board();
+            Player player1 = new Player();
+            player1.name = "player1";
+            player1.chess = 1;
+            Player player2 = new Player();
+            player2.name = "player2";
+            player2.chess = 2;
+
+            // Draw the game board
+            board.DrawBoard();
+            Console.WriteLine();
+
+            // Record which player's turn
+            Player currentPlayer = player1;
+
+            // ask current player to choose a spot
+            while (!game.ChechForWin(board, player1) && !game.ChechForWin(board, player2))
+            {
+                Console.Write($"{currentPlayer.name}'s turn to select a spot: ");
+                int spot = Int32.Parse(Console.ReadLine());
+
+                // Check whether this slot is full
+                while (board.status[0][spot - 1] != 0)
+                {
+                    Console.WriteLine("Sorry, this slot is full, please choose another spot: ");
+                    spot = Int32.Parse(Console.ReadLine());
+                }
+
+                game.updateStatus(spot, currentPlayer, board);
+                board.DrawBoard();
+                Console.WriteLine();
+
+                if (game.ChechForWin(board, currentPlayer)) { break; }
+
+                currentPlayer = game.switchPlayer(currentPlayer, player1, player2);
+            }
+
+            Console.WriteLine($"{currentPlayer.name} won! Congradulation!");
+        }
+    }
+    
+    public class GameSystem
+    {
+        public Player switchPlayer(Player currentPlayer, Player player1, Player player2)
+        {
+            if (currentPlayer == player1) { return player2; }
+            else if (currentPlayer == player2) { return player1; }
+            return null;
+        }
+
+        public void updateStatus(int spot, Player currentPlayer, Board board)
+        {
+            int row = 5;
+            while (row >= 0)
+            {
+                if (board.status[row][spot - 1] == 0)
+                {
+                    board.status[row][spot - 1] = currentPlayer.chess;
+                    return;
+                }
+                row--;
+            }
+        }
+
+        public bool ChechForWin(Board board, Player player)
+        {
+            int count = 0;
+
+            // Check whether there are 4 same chesses in a row
+            for (int row = 0; row < board.rows; row++)
+            {
+                for (int column = 0; column < 4; column++)
+                {
+                    for (int checkPoint = 0; checkPoint < 4; checkPoint++)
+                    {
+                        if (board.status[row][column + checkPoint] == player.chess)
+                            count += 1;
+                    }
+                    if (count == 4)
+                        return true;
+
+                    count = 0;
+                }
+            }
+
+            // Check whether there are 4 same chesses in a column
+            for (int column = 0; column < board.columns; column++)
+            {
+                for (int row = 0; row < 3; row++)
+                {
+                    for (int checkPoint = 0; checkPoint < 4; checkPoint++)
+                    {
+                        if (board.status[row + checkPoint][column] == player.chess)
+                            count += 1;
+                    }
+                    if (count == 4)
+                        return true;
+
+                    count = 0;
+                }
+            }
+
+            // Check whether there are 4 same chesses side to side from top left to bottom right
+            for (int row = 0; row < 3; row++)
+            {
+                for (int column = 0; column < 4; column++)
+                {
+                    for (int checkPoint = 0; (column + 3) < board.columns && (row + 3) < board.rows && checkPoint < 4; checkPoint++)
+                    {
+                        if (board.status[row + checkPoint][column + checkPoint] == player.chess)
+                            count += 1;
+                    }
+                    if (count == 4)
+                        return true;
+
+                    count = 0;
+                }
+            }
+
+            // Check whether there are 4 same chesses side to side from top right to bottom left
+            for (int row = 5; row >= 3; row--)
+            {
+                for (int column = 0; column < 4; column++)
+                {
+                    for (int checkPoint = 0; (column + 3) < board.columns && (row - 3) >= 0 && checkPoint < 4; checkPoint++)
+                    {
+                        if (board.status[row - checkPoint][column + checkPoint] == player.chess)
+                            count += 1;
+                    }
+                    if (count == 4)
+                        return true;
+
+                    count = 0;
+                }
+            }
+
+            return false;
+        }
+    }
+    
+    public class Board
+    {
+        public int rows { get; set; }
+        public int columns { get; set; }
+        public int[][] status { get; set; }
+
+        public Board()
+        {
+            rows = 6;
+            columns = 7;
+            status = new int[][]
+            {
+                new int[] {0, 0, 0, 0, 0, 0, 0},
+                new int[] {0, 0, 0, 0, 0, 0, 0},
+                new int[] {0, 0, 0, 0, 0, 0, 0},
+                new int[] {0, 0, 0, 0, 0, 0, 0},
+                new int[] {0, 0, 0, 0, 0, 0, 0},
+                new int[] {0, 0, 0, 0, 0, 0, 0}
+            };
+        }
+
+        public void DrawBoard()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for ( int j = 0; j < columns; j++)
+                {
+                    if (status[i][j] == 1)
+                        Console.Write("X ");
+                    else if (status[i][j] == 2)
+                        Console.Write("O ");
+                    else
+                        Console.Write(". ");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+    
+    public class Player
+    {
+        public string name { get; set; }
+        public int chess { get; set; }
+    }
+}
