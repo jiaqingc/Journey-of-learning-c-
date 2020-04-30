@@ -1,0 +1,108 @@
+using System;
+
+namespace Reverse_It
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Do you want auto complete? (Y/N): ");
+            char answer = Char.Parse(Console.ReadLine());
+            if (answer == 'Y' || answer == 'y') { autoCompleteReverse(); return; }
+
+            int[] randomArray = BuildArray();
+
+            while (!IsArraySorted(randomArray))
+            {
+                printArray(randomArray);
+                Console.Write("Please decide how many numbers to reverse: ");
+                int reverseLength = Int32.Parse(Console.ReadLine());
+                randomArray = reverse(randomArray, reverseLength);
+            }
+
+            printArray(randomArray);
+            Console.WriteLine("Well done! You won.");
+        }
+
+        private static void printArray(int[] randomArray)
+        {
+            for (int i = 0; i < randomArray.Length; i++)
+            {
+                Console.Write(randomArray[i]);
+            }
+            Console.WriteLine();
+        }
+
+        private static void autoCompleteReverse()
+        {
+            int[] randomArray = BuildArray();
+            int targetNumber = 9;
+            
+            while (!IsArraySorted(randomArray))
+            {
+                printArray(randomArray);
+                int spot = 0;
+                while (randomArray[spot] != targetNumber)
+                {
+                    spot++;
+                }
+                int reverseLength = spot + 1;
+                if (reverseLength != 1)
+                {
+                    randomArray = reverse(randomArray, reverseLength);
+                    printArray(randomArray);
+                }    
+                reverseLength = targetNumber;
+                randomArray = reverse(randomArray, reverseLength);
+                targetNumber--;
+            }
+
+            printArray(randomArray);
+            Console.WriteLine("Well done! You won.");
+        }
+
+        private static bool IsArraySorted(int[] randomArray)
+        {
+            if (randomArray[0] != 1) { return false; }
+            if (randomArray[1] != 2) { return false; }
+            if (randomArray[2] != 3) { return false; }
+            if (randomArray[3] != 4) { return false; }
+            if (randomArray[4] != 5) { return false; }
+            if (randomArray[5] != 6) { return false; }
+            if (randomArray[6] != 7) { return false; }
+            if (randomArray[7] != 8) { return false; }
+            if (randomArray[8] != 9) { return false; }
+            return true;
+        }
+
+        private static int[] reverse(int[] randomArray, int reverseLength)
+        {
+            for (int i = 0; i < reverseLength/2; i++)
+            {
+                int temp = randomArray[i];
+                randomArray[i] = randomArray[reverseLength - i - 1];
+                randomArray[reverseLength - i - 1] = temp;
+            }
+            return randomArray;
+        }
+
+        private static int[] BuildArray()
+        {
+            int[] randomArray = new int[9];
+            Random random = new Random();
+
+            for (int number = 1; number <= 9; number++)
+            {
+                int spot = random.Next(9);
+
+                while (randomArray[spot] != 0)
+                {
+                    spot = random.Next(9);
+                }
+
+                randomArray[spot] = number;
+            }
+            return randomArray;
+        }
+    }
+}
